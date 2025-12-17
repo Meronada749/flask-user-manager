@@ -2,36 +2,37 @@ name: python flask
 
 on: [push, pull_request]
 
-
 jobs:
-    test:
-        runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
 
-        steps:
-          - name: Tells GitHub to pull your repository’s code into the runner
-            uses: actions/checkout@v5
+    steps:
+      - name: Tells GitHub to pull your repository’s code into the runner
+        uses: actions/checkout@v5
 
-          - name: Install python 
-            uses: actions/setup-python@v6
-            with:
-                python-version: '3.14.2'
+      - name: Install python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14.2"
 
-          - name: Install dependencies
-            run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-          - name: Audit
-            uses: pypa/gh-action-pip-audit@v1.0.0
-            with:
-                inputs: requirements.txt
+      - name: Audit dependencies
+        uses: pypa/gh-action-pip-audit@v1.0.0
+        with:
+          requirement-path: requirements.txt # correct input
+          format: json # optional, outputs JSON
+          output: /tmp/pip-audit-output.txt # ensures file exists for the action
 
-          - name: flake8 Lint
-            run:  flake8 .
-            
-          - name: Test the code
-            run: python tests.py
+      - name: flake8 Lint
+        run: flake8 .
 
-          - name: Archive production artifacts
-            uses: actions/upload-artifact@v4
-            with:
-                name: flask-prod-ready
-                path: ./
+      - name: Test the code
+        run: python tests.py
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flask-prod-ready
+          path: ./
