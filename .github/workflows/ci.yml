@@ -18,12 +18,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Audit dependencies
-        uses: pypa/gh-action-pip-audit@v1.0.0
-        with:
-          requirement-path: requirements.txt # correct input
-          format: json # optional, outputs JSON
-          output: /tmp/pip-audit-output.txt # ensures file exists for the action
+      - name: Install safety
+        run: pip install safety
+
+      - name: Audit dependencies with Safety
+        run: safety check -r requirements.txt
 
       - name: flake8 Lint
         run: flake8 .
