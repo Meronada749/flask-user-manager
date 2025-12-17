@@ -2,6 +2,7 @@ name: python flask
 
 on: [push, pull_request]
 
+
 jobs:
     test:
         runs-on: ubuntu-latest
@@ -18,8 +19,19 @@ jobs:
           - name: Install dependencies
             run: pip install -r requirements.txt
 
+          - name: Audit
+            uses: pypa/gh-action-pip-audit@v1.0.0
+            with:
+                inputs: requirements.txt
+
           - name: flake8 Lint
             run:  flake8 .
             
           - name: Test the code
             run: python tests.py
+
+          - name: Archive production artifacts
+            uses: actions/upload-artifact@v4
+            with:
+                name: flask-prod-ready
+                path: ./
