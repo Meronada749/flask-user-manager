@@ -1,0 +1,22 @@
+name: python flask
+
+on: [push, pull_request]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Tells GitHub to pull your repository’s code into the runner
+            uses: actions/checkout@v5
+
+          - name: Install python 
+            uses: actions/setup-python@v6
+            with:
+                python-version: '3.14.2'
+
+          - name: Install dependencies
+            run: pip install -r requirements.txt
+            
+          - name: Test the code
+            run: python tests.py
